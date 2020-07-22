@@ -5,7 +5,9 @@
     <h1>{% trans "Team assignment rules" %}</h1>
 
     <p>
-        <a href="#"class="btn btn-default"><i class="fa fa-plus"></i> {% trans "Create a new team assignment rule" %}</a>
+        <a href="{% url "plugins:pretix_oidc:team_assignment_rules.add" organizer=request.organizer.slug %}"
+           class="btn btn-default"><i class="fa fa-plus"></i> {% trans "Create a new team assignment rule" %}
+        </a>
     </p>
     <div class="table-responsive">
         <table class="table table-condensed table-hover">

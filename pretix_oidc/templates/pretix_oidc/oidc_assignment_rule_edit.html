@@ -1,0 +1,24 @@
+{% extends "pretixcontrol/organizers/base.html" %}
+{% load i18n %}
+{% load bootstrap3 %}
+{% block inner %}
+    {% if url_name == "team_assignment_rules.edit" %}
+        <h1>{% trans "Modify team assignment rule" %}</h1>
+    {% else %}
+        <h1>{% trans "Create team assignment rule" %}</h1>
+    {% endif %}
+
+    <form class="form-horizontal" action="" method="post">
+        {% csrf_token %}
+        {% bootstrap_form_errors form %}
+        {% bootstrap_field form.team layout="control" %}
+        {% bootstrap_field form.attribute layout="control" %}
+        {% bootstrap_field form.value layout="control" %}
+
+        <div class="form-group submit-group">
+            <button type="submit" class="btn btn-primary btn-save">
+                {% trans "Save" %}
+            </button>
+        </div>
+    </form>
+{% endblock %}

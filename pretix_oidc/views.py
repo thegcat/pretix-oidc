@@ -25,8 +25,4 @@ def oidc_callback(request):
     user.fullname = user_data['fullname']
     user.save()
 
-    organizer = Organizer.objects.get(slug=auth_backend.organizer)
-    team = organizer.teams.first()
-    team.members.add(user)
-
     return process_login(request, user, False)

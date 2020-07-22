@@ -41,9 +41,6 @@ class OIDCAuthBackend(BaseAuthBackend):
             self.client.redirect_uris = [None]
 
             self.scopes = self.config.get('scopes', 'openid').split(',')
-            self.organizer = self.config['organizer']
-            self.roles_claim = self.config.get('roles_claim')
-            self.allowed_roles = self.config.get('allowed_roles')
         except KeyError:
             logger.error("Please specify issuer, authorization_endpoint, token_endpoint, userinfo_endpoint, end_session_endpoint, jwks_uri, client_id and client_secret in [oidc] section in pretix.cfg")
 

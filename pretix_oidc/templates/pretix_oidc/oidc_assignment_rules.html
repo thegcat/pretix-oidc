@@ -1,0 +1,40 @@
+{% extends "pretixcontrol/organizers/base.html" %}
+{% load i18n %}
+{% load bootstrap3 %}
+{% block inner %}
+    <h1>{% trans "Team assignment rules" %}</h1>
+
+    <p>
+        <a href="#"class="btn btn-default"><i class="fa fa-plus"></i> {% trans "Create a new team assignment rule" %}</a>
+    </p>
+    <div class="table-responsive">
+        <table class="table table-condensed table-hover">
+            <thead>
+            <tr>
+                <th>{% trans "Team name" %}</th>
+                <th>{% trans "OIDC attribute" %}</th>
+                <th>{% trans "Attribute value" %}</th>
+                <th>{# Empty column header for per-row buttons #}</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for rule in assignmentRules %}
+                <tr>
+                <td><strong>
+                    <a href="{% url "control:organizer.team" organizer=request.organizer.slug team=rule.team.id %}">
+                        {{ rule.team.name }}
+                    </a>
+                </strong></td>
+                <td>
+                    {{ rule.attribute }}
+                </td>
+                <td>
+                    {{ rule.value }}
+                </td>
+                <td class="text-right flip">
+                </td>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

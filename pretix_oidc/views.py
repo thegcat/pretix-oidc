@@ -1,3 +1,7 @@
+from dictlib import dig_get
+
+from django.contrib import messages
+from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.shortcuts import redirect
 from django.urls import reverse
@@ -15,7 +19,7 @@ from .oidc_connector import OIDCAuthBackend # NOQA
 
 def oidc_callback(request):
     auth_backend = OIDCAuthBackend()
-    user_data = auth_backend.process_callback(request)
+    user_data, id_token = auth_backend.process_callback(request)
 
     if user_data is None:
         return redirect('auth.login')
@@ -31,7 +35,25 @@ def oidc_callback(request):
     user.fullname = user_data['fullname']
     user.save()
 
+    _add_user_to_teams(user, id_token)
+
     return process_login(request, user, False)
+
+def _add_user_to_teams(user, id_token):
+    rules = OIDCTeamAssignmentRule.objects.all()
+    teams = []
+
+    for rule in rules:
+        values = dig_get(id_token, rule.attribute, [])
+        if type(values) is not list:
+            values = [values]
+
+        if rule.value in values:
+            try:
+                rule.team.members.add(user)
+            except ObjectDoesNotExist:
+                pass
+
 
 
 # These views have been adapted from pretix-cas plugin (https://github.com/DataManagementLab/pretix-cas)

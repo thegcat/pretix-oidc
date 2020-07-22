@@ -83,7 +83,7 @@ class OIDCAuthBackend(BaseAuthBackend):
         #     raise Exception('Invalid authorization response')
 
         if auth_response['state'] != request.session['oidc_state']:
-            return None
+            return [None, None]
 
         access_token_response = self.client.do_access_token_request(
             state=auth_response['state'],
@@ -102,5 +102,5 @@ class OIDCAuthBackend(BaseAuthBackend):
             'auth_backend': self.identifier,
         }
 
-        return user_data
+        return [user_data, id_token]
 

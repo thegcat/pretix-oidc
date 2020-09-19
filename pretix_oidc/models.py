@@ -10,4 +10,7 @@ class OIDCTeamAssignmentRule(models.Model):
     value = models.CharField(max_length=255, verbose_name=_('Attribute value'))
 
     class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['team', 'attribute', 'value'], name='unique_rule')
+        ]
         verbose_name = _('Team assignment rule')

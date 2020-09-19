@@ -5,6 +5,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.shortcuts import redirect
 from django.urls import reverse
+from django.utils.translation import gettext as _
 from django.views.generic import TemplateView
 from django.views.generic.edit import CreateView
 
@@ -14,7 +15,7 @@ from pretix.control.views.auth import process_login
 
 from .forms import OIDCAssignmentRuleForm
 from .models import OIDCTeamAssignmentRule
-from .oidc_connector import OIDCAuthBackend # NOQA
+from .auth import OIDCAuthBackend # NOQA
 
 
 def oidc_callback(request):

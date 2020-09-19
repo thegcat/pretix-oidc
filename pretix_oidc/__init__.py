@@ -1,4 +1,3 @@
-from .oidc_connector import OIDCAuthBackend # NOQA
 from django.utils.translation import gettext_lazy
 
 try:

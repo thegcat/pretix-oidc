@@ -9,7 +9,7 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('pretixbase', '0157_auto_20200722_2153'),
+        ('pretixbase', '0162_remove_seat_name'),
     ]
 
     operations = [

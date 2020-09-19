@@ -9,13 +9,13 @@ from django.utils.translation import gettext as _
 from django.views.generic import TemplateView
 from django.views.generic.edit import CreateView, DeleteView
 
-from pretix.base.models import Organizer, Team, User
+from pretix.base.models import Team, User
 from pretix.control.permissions import OrganizerPermissionRequiredMixin
 from pretix.control.views.auth import process_login
 
 from .forms import OIDCAssignmentRuleForm
 from .models import OIDCTeamAssignmentRule
-from .auth import OIDCAuthBackend # NOQA
+from .auth import OIDCAuthBackend  # NOQA
 
 
 def oidc_callback(request):
@@ -40,6 +40,7 @@ def oidc_callback(request):
 
     return process_login(request, user, False)
 
+
 def _add_user_to_teams(user, id_token):
     rules = OIDCTeamAssignmentRule.objects.all()
     teams = []
@@ -54,7 +55,6 @@ def _add_user_to_teams(user, id_token):
                 rule.team.members.add(user)
             except ObjectDoesNotExist:
                 pass
-
 
 
 # These views have been adapted from pretix-cas plugin (https://github.com/DataManagementLab/pretix-cas)

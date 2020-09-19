@@ -43,7 +43,6 @@ def oidc_callback(request):
 
 def _add_user_to_teams(user, id_token):
     rules = OIDCTeamAssignmentRule.objects.all()
-    teams = []
 
     for rule in rules:
         values = dig_get(id_token, rule.attribute, [])
@@ -55,6 +54,8 @@ def _add_user_to_teams(user, id_token):
                 rule.team.members.add(user)
             except ObjectDoesNotExist:
                 pass
+        else:
+            rule.team.members.remove(user)
 
 
 # These views have been adapted from pretix-cas plugin (https://github.com/DataManagementLab/pretix-cas)

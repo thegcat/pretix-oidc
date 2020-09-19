@@ -34,6 +34,8 @@
                     {{ rule.value }}
                 </td>
                 <td class="text-right flip">
+                    <a href="{% url "plugins:pretix_oidc:team_assignment_rules.delete" organizer=request.organizer.slug pk=rule.id %}"
+                       class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></a>
                 </td>
             {% endfor %}
             </tbody>

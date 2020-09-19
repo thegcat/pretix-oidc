@@ -7,7 +7,7 @@ from django.shortcuts import redirect
 from django.urls import reverse
 from django.utils.translation import gettext as _
 from django.views.generic import TemplateView
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import CreateView, DeleteView
 
 from pretix.base.models import Organizer, Team, User
 from pretix.control.permissions import OrganizerPermissionRequiredMixin
@@ -98,3 +98,7 @@ class AssignmentRuleUpdateMixin(AssignmentRuleEditMixin):
 
 class AssignmentRuleCreate(AssignmentRuleUpdateMixin, CreateView):
     pass
+
+
+class AssignmentRuleDelete(AssignmentRuleEditMixin, DeleteView):
+    template_name = 'pretix_oidc/oidc_assignment_rule_delete.html'

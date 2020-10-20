@@ -4,6 +4,8 @@ from distutils.command.build import build
 from django.core import management
 from setuptools import find_packages, setup
 
+from pretix_oidc import __version__
+
 
 try:
     with open(os.path.join(os.path.dirname(__file__), 'README.rst'), encoding='utf-8') as f:
@@ -25,7 +27,7 @@ cmdclass = {
 
 setup(
     name='pretix-oidc',
-    version='0.1.0',
+    version=__version__,
     description='OIDC authentication plugin for Pretix',
     long_description=long_description,
     url='https://gitlab.com/naaspeksi/pretix-oidc',

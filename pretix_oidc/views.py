@@ -46,6 +46,7 @@ def _add_user_to_teams(user, id_token):
 
     for rule in rules:
         values = dig_get(id_token, rule.attribute, [])
+
         if type(values) is not list:
             values = [values]
 

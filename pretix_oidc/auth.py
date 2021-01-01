@@ -16,23 +16,21 @@ logger = logging.getLogger(__name__)
 class OIDCAuthBackend(BaseAuthBackend):
     def __init__(self):
         try:
-            self.config = config['oidc']
-
-            self.title = self.config.get('title', 'Login with OpenID connect')
+            self.title = config.get('oidc', 'title', fallback='Login with OpenID connect')
 
             op_info = ProviderConfigurationResponse(
                 version='1.0',
-                issuer=self.config['issuer'],
-                authorization_endpoint=self.config['authorization_endpoint'],
-                token_endpoint=self.config['token_endpoint'],
-                userinfo_endpoint=self.config['userinfo_endpoint'],
-                end_session_endpoint=self.config['end_session_endpoint'],
-                jwks_uri=self.config['jwks_uri']
+                issuer=config.get('oidc', 'issuer'),
+                authorization_endpoint=config.get('oidc', 'authorization_endpoint'),
+                token_endpoint=config.get('oidc', 'token_endpoint'),
+                userinfo_endpoint=config.get('oidc', 'userinfo_endpoint'),
+                end_session_endpoint=config.get('oidc', 'end_session_endpoint'),
+                jwks_uri=config.get('oidc', 'jwks_uri')
             )
 
             client_reg = RegistrationResponse(
-                client_id=self.config['client_id'],
-                client_secret=self.config['client_secret'],
+                client_id=config.get('oidc', 'client_id'),
+                client_secret=config.get('oidc', 'client_secret'),
             )
 
             self.client = Client(client_authn_method=CLIENT_AUTHN_METHOD)
@@ -40,7 +38,7 @@ class OIDCAuthBackend(BaseAuthBackend):
             self.client.store_registration_info(client_reg)
             self.client.redirect_uris = [None]
 
-            self.scopes = self.config.get('scopes', 'openid').split(',')
+            self.scopes = config.get('oidc', 'scopes', fallback='openid').split(',')
         except KeyError:
             logger.error("Please specify issuer, authorization_endpoint, token_endpoint, userinfo_endpoint, end_session_endpoint, jwks_uri, client_id and client_secret in [oidc] section in pretix.cfg")
 

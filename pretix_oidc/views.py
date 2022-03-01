@@ -26,19 +26,24 @@ def oidc_callback(request):
         return redirect('auth.login')
 
     try:
-        user = User.objects.get(email=user_data['email'])
-    except User.DoesNotExist:
-        user = User(
-            email=user_data['email'],
-            auth_backend=auth_backend.identifier
+        user = User.objects.get_or_create_for_backend(
+            auth_backend.identifier,
+            user_data['uuid'],
+            user_data['email'],
+            set_always={
+                'fullname': user_data['fullname']
+            },
+            set_on_creation={},
         )
-
-    user.fullname = user_data['fullname']
-    user.save()
-
-    _add_user_to_teams(user, id_token)
-
-    return process_login(request, user, False)
+    except User.EmailAddressTakenError:
+        messages.error(
+            request, _('We cannot create your user account as a user account in this system '
+                       'already exists with the same email address.')
+        )
+        return redirect(reverse('control:auth.login'))
+    else:
+        _add_user_to_teams(user, id_token)
+        return process_login(request, user, False)
 
 
 def _add_user_to_teams(user, id_token):

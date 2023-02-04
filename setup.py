@@ -34,10 +34,7 @@ setup(
     author="Jaakko Rinta-Filppula, Felix Schäfer",
     author_email="admin@kif.rocks",
     license="Apache",
-    install_requires=[
-        'dictlib>=1.1.5',
-        'oic>=1.2.0'
-        ],
+    install_requires=["dictlib>=1.1.5", "oic>=1.2.0"],
     packages=find_packages(exclude=["tests", "tests.*"]),
     include_package_data=True,
     cmdclass=cmdclass,

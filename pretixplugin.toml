@@ -1,0 +1,5 @@
+[plugin]
+package = "pretix-oidc"
+modules = [ "pretix_oidc" ]
+marketplace_name = "oidc"
+

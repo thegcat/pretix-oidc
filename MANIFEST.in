@@ -1,3 +1,5 @@
 recursive-include pretix_oidc/static *
 recursive-include pretix_oidc/templates *
 recursive-include pretix_oidc/locale *
+include LICENSE
+exclude .gitlab-ci.yml

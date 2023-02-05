@@ -101,7 +101,7 @@ class OIDCAuthBackend(BaseAuthBackend):
 
         id_token = access_token_response["id_token"]
         user_data = {
-            "uuid": id_token["sub"],
+            "uuid": id_token[config.get("oidc", "unique_attribute", fallback="sub")],
             "email": id_token["email"],
             "fullname": id_token["name"],
             "auth_backend": self.identifier,

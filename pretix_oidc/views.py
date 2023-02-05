@@ -7,6 +7,7 @@ from django.utils.translation import gettext as _
 from django.views.generic import TemplateView
 from django.views.generic.edit import CreateView, DeleteView
 from pretix.base.models import Team, User
+from pretix.base.models.auth import EmailAddressTakenError
 from pretix.control.permissions import OrganizerPermissionRequiredMixin
 from pretix.control.views.auth import process_login
 
@@ -30,7 +31,7 @@ def oidc_callback(request):
             set_always={"fullname": user_data["fullname"]},
             set_on_creation={},
         )
-    except User.EmailAddressTakenError:
+    except EmailAddressTakenError:
         messages.error(
             request,
             _(

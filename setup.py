@@ -9,7 +9,7 @@ from pretix_oidc import __version__
 
 try:
     with open(
-        os.path.join(os.path.dirname(__file__), "README.rst"), encoding="utf-8"
+        os.path.join(os.path.dirname(__file__), "README.md"), encoding="utf-8"
     ) as f:
         long_description = f.read()
 except Exception:
@@ -30,6 +30,7 @@ setup(
     version=__version__,
     description="OIDC authentication plugin for pretix",
     long_description=long_description,
+    long_description_content_type="text/markdown",
     url="https://gitlab.fachschaften.org/kif/pretix-oidc",
     author="Jaakko Rinta-Filppula, Felix Schäfer",
     author_email="admin@kif.rocks",

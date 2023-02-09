@@ -17,7 +17,7 @@ class PluginApp(PluginConfig):
         name = gettext_lazy("pretix OIDC")
         author = "Jaakko Rinta-Filppula, Felix Schäfer"
         description = gettext_lazy("OIDC authentication plugin for pretix")
-        visible = True
+        visible = False
         version = __version__
         category = "FEATURE"
         compatibility = "pretix>=2.7.0"

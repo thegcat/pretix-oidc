@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-09 22:42+0100\n"
+"POT-Creation-Date: 2023-02-09 23:10+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,17 +25,17 @@ msgstr ""
 msgid "OIDC authentication plugin for pretix"
 msgstr ""
 
-#: pretix_oidc/models.py:8
+#: pretix_oidc/models.py:9
 #: pretix_oidc/templates/pretix_oidc/oidc_assignment_rules.html:17
 msgid "OIDC attribute"
 msgstr ""
 
-#: pretix_oidc/models.py:9
+#: pretix_oidc/models.py:12
 #: pretix_oidc/templates/pretix_oidc/oidc_assignment_rules.html:18
 msgid "Attribute value"
 msgstr ""
 
-#: pretix_oidc/models.py:17
+#: pretix_oidc/models.py:21
 msgid "Team assignment rule"
 msgstr ""
 
@@ -80,16 +80,16 @@ msgstr ""
 msgid "Team name"
 msgstr ""
 
-#: pretix_oidc/views.py:38
+#: pretix_oidc/views.py:39
 msgid ""
 "We cannot create your user account as a user account in this system already "
 "exists with the same email address."
 msgstr ""
 
-#: pretix_oidc/views.py:103
+#: pretix_oidc/views.py:104
 msgid "The new assignment rule has been created."
 msgstr ""
 
-#: pretix_oidc/views.py:107
+#: pretix_oidc/views.py:108
 msgid "The assignment rule could not be created."
 msgstr ""

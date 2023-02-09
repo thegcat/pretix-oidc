@@ -1,6 +1,6 @@
 from django.dispatch import receiver
 from django.urls import reverse
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy
 from pretix.control.permissions import organizer_permission_required
 from pretix.control.signals import nav_organizer
 
@@ -12,7 +12,7 @@ def add_team_auto_assign_to_nav_pane(sender, request, **kwargs):
     navigation pane."""
     return [
         {
-            "label": _("Team assignment rules"),
+            "label": gettext_lazy("Team assignment rules"),
             "url": reverse(
                 "plugins:pretix_oidc:team_assignment_rules",
                 kwargs={"organizer": request.organizer.slug},

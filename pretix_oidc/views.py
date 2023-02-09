@@ -5,11 +5,12 @@ from django.shortcuts import redirect
 from django.urls import reverse
 from django.utils.translation import gettext as _
 from django.views.generic import TemplateView
-from django.views.generic.edit import CreateView, DeleteView
+from django.views.generic.edit import CreateView
 from pretix.base.models import Team, User
 from pretix.base.models.auth import EmailAddressTakenError
 from pretix.control.permissions import OrganizerPermissionRequiredMixin
 from pretix.control.views.auth import process_login
+from pretix.helpers.compat import CompatDeleteView
 
 from .auth import OIDCAuthBackend  # NOQA
 from .forms import OIDCAssignmentRuleForm
@@ -112,5 +113,5 @@ class AssignmentRuleCreate(AssignmentRuleUpdateMixin, CreateView):
     pass
 
 
-class AssignmentRuleDelete(AssignmentRuleEditMixin, DeleteView):
+class AssignmentRuleDelete(AssignmentRuleEditMixin, CompatDeleteView):
     template_name = "pretix_oidc/oidc_assignment_rule_delete.html"

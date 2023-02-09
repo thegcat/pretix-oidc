@@ -1,9 +1,9 @@
-Pretix OIDC
+pretix OIDC
 ==========================
 
-This is a plugin for `pretix`_. 
+This is a plugin for `pretix`_.
 
-OIDC authentication plugin for Pretix
+OIDC authentication plugin for pretix
 
 Development setup
 -----------------
@@ -23,18 +23,16 @@ Development setup
 
 This plugin has CI set up to enforce a few code style rules. To check locally, you need these packages installed::
 
-    pip install flake8 isort black docformatter
+    pip install flake8 isort black
 
 To check your plugin for rule violations, run::
 
-    docformatter --check -r .
     black --check .
     isort -c .
     flake8 .
 
 You can auto-fix some of these issues by running::
 
-    docformatter -r .
     isort .
     black .
 

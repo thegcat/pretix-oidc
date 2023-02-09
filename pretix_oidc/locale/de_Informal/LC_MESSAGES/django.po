@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-07 19:01+0100\n"
+"POT-Creation-Date: 2023-02-09 22:42+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Jaakko Rinta-Filppula, Felix Schäfer\n"
 "Language-Team: \n"
@@ -10,3 +10,80 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+
+#: pretix_oidc/apps.py:17
+msgid "pretix OIDC"
+msgstr ""
+
+#: pretix_oidc/apps.py:19
+msgid "OIDC authentication plugin for pretix"
+msgstr ""
+
+#: pretix_oidc/models.py:8
+#: pretix_oidc/templates/pretix_oidc/oidc_assignment_rules.html:17
+msgid "OIDC attribute"
+msgstr ""
+
+#: pretix_oidc/models.py:9
+#: pretix_oidc/templates/pretix_oidc/oidc_assignment_rules.html:18
+msgid "Attribute value"
+msgstr ""
+
+#: pretix_oidc/models.py:17
+msgid "Team assignment rule"
+msgstr ""
+
+#: pretix_oidc/signals.py:15
+#: pretix_oidc/templates/pretix_oidc/oidc_assignment_rules.html:5
+msgid "Team assignment rules"
+msgstr ""
+
+#: pretix_oidc/templates/pretix_oidc/oidc_assignment_rule_delete.html:5
+msgid "Delete team assignment rule:"
+msgstr ""
+
+#: pretix_oidc/templates/pretix_oidc/oidc_assignment_rule_delete.html:8
+msgid "Are you sure you want to delete this rule?"
+msgstr ""
+
+#: pretix_oidc/templates/pretix_oidc/oidc_assignment_rule_delete.html:12
+msgid "Cancel"
+msgstr ""
+
+#: pretix_oidc/templates/pretix_oidc/oidc_assignment_rule_delete.html:15
+msgid "Delete"
+msgstr ""
+
+#: pretix_oidc/templates/pretix_oidc/oidc_assignment_rule_edit.html:6
+msgid "Modify team assignment rule"
+msgstr ""
+
+#: pretix_oidc/templates/pretix_oidc/oidc_assignment_rule_edit.html:8
+msgid "Create team assignment rule"
+msgstr ""
+
+#: pretix_oidc/templates/pretix_oidc/oidc_assignment_rule_edit.html:20
+msgid "Save"
+msgstr ""
+
+#: pretix_oidc/templates/pretix_oidc/oidc_assignment_rules.html:9
+msgid "Create a new team assignment rule"
+msgstr ""
+
+#: pretix_oidc/templates/pretix_oidc/oidc_assignment_rules.html:16
+msgid "Team name"
+msgstr ""
+
+#: pretix_oidc/views.py:38
+msgid ""
+"We cannot create your user account as a user account in this system already "
+"exists with the same email address."
+msgstr ""
+
+#: pretix_oidc/views.py:103
+msgid "The new assignment rule has been created."
+msgstr ""
+
+#: pretix_oidc/views.py:107
+msgid "The assignment rule could not be created."
+msgstr ""

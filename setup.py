@@ -28,7 +28,7 @@ cmdclass = {"build": CustomBuild}
 setup(
     name="pretix-oidc",
     version=__version__,
-    description="OIDC authentication plugin for Pretix",
+    description="OIDC authentication plugin for pretix",
     long_description=long_description,
     url="https://gitlab.fachschaften.org/kif/pretix-oidc",
     author="Jaakko Rinta-Filppula, Felix Schäfer",

@@ -60,6 +60,11 @@ class OIDCAuthBackend(BaseAuthBackend):
         request.session["oidc_state"] = rndstr()
         request.session["oidc_nonce"] = rndstr()
 
+        next_url = ''
+        if "next" in request.GET:
+            next_url = request.GET.get("next")
+        request.session["next_url"] = next_url
+
         auth_req = self.client.construct_AuthorizationRequest(
             request_args={
                 "client_id": self.client.client_id,
@@ -75,6 +80,13 @@ class OIDCAuthBackend(BaseAuthBackend):
 
     def redirect_uri(self, request):
         return request.build_absolute_uri(reverse("plugins:pretix_oidc:oidc_callback"))
+
+    def get_next_url(self, request):
+        if "next_url" in request.session:
+            next_url = request.session["next_url"]
+            if len(next_url) > 0:
+                return next_url
+        return None
 
     def process_callback(self, request):
         auth_response = self.client.parse_response(

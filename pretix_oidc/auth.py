@@ -1,4 +1,5 @@
 import logging
+import time
 from django.urls import reverse
 from oic import rndstr
 from oic.oic import Client
@@ -57,7 +58,12 @@ class OIDCAuthBackend(BaseAuthBackend):
         return self.title
 
     def authentication_url(self, request):
-        request.session["oidc_state"] = rndstr()
+        oidc_state = rndstr()
+        request.session["oidc_state"] = {
+            oidc_state: {
+                "generated_on": int(time.time()),
+            }
+        }
 
         auth_req = self.client.construct_AuthorizationRequest(
             request_args={
@@ -65,7 +71,7 @@ class OIDCAuthBackend(BaseAuthBackend):
                 "response_type": "code",
                 "scope": self.scopes,
                 "redirect_uri": self.redirect_uri(request),
-                "state": request.session["oidc_state"],
+                "state": oidc_state,
             }
         )
 
@@ -81,7 +87,16 @@ class OIDCAuthBackend(BaseAuthBackend):
             sformat="urlencoded",
         )
 
-        if auth_response["state"] != request.session["oidc_state"]:
+        oidc_state = request.session.pop("oidc_state", None)
+        response_state = auth_response.get("state", None)
+
+        if not oidc_state or not response_state:
+            return [None, None]
+
+        if response_state not in oidc_state:
+            return [None, None]
+
+        if oidc_state[response_state]["generated_on"] < time.time() - 5 * 60:
             return [None, None]
 
         access_token_response = self.client.do_access_token_request(

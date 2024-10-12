@@ -81,9 +81,6 @@ class OIDCAuthBackend(BaseAuthBackend):
             sformat="urlencoded",
         )
 
-        # if auth_response is not AuthorizationResponse:
-        #     raise Exception('Invalid authorization response')
-
         if auth_response["state"] != request.session["oidc_state"]:
             return [None, None]
 

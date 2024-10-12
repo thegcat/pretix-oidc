@@ -61,6 +61,7 @@ class OIDCAuthBackend(BaseAuthBackend):
         oidc_state = rndstr()
         request.session["oidc_state"] = {
             oidc_state: {
+                "next": request.GET.get("next", None),
                 "generated_on": int(time.time()),
             }
         }
@@ -80,6 +81,9 @@ class OIDCAuthBackend(BaseAuthBackend):
     def redirect_uri(self, request):
         return request.build_absolute_uri(reverse("plugins:pretix_oidc:oidc_callback"))
 
+    def get_next_url(self, request):
+        return request.session.pop("oidc_next_url", None)
+
     def process_callback(self, request):
         auth_response = self.client.parse_response(
             AuthorizationResponse,
@@ -87,6 +91,7 @@ class OIDCAuthBackend(BaseAuthBackend):
             sformat="urlencoded",
         )
 
+        request.session["oidc_next_url"] = None
         oidc_state = request.session.pop("oidc_state", None)
         response_state = auth_response.get("state", None)
 
@@ -98,6 +103,8 @@ class OIDCAuthBackend(BaseAuthBackend):
 
         if oidc_state[response_state]["generated_on"] < time.time() - 5 * 60:
             return [None, None]
+
+        request.session["oidc_next_url"] = oidc_state[response_state]["next"]
 
         access_token_response = self.client.do_access_token_request(
             state=auth_response["state"],

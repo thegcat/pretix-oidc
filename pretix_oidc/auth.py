@@ -58,14 +58,12 @@ class OIDCAuthBackend(BaseAuthBackend):
 
     def authentication_url(self, request):
         request.session["oidc_state"] = rndstr()
-        request.session["oidc_nonce"] = rndstr()
 
         auth_req = self.client.construct_AuthorizationRequest(
             request_args={
                 "client_id": self.client.client_id,
                 "response_type": "code",
                 "scope": self.scopes,
-                "nonce": request.session["oidc_nonce"],
                 "redirect_uri": self.redirect_uri(request),
                 "state": request.session["oidc_state"],
             }

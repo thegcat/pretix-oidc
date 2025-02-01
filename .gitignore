@@ -49,6 +49,7 @@ __pycache__/
 
 # Distribution / packaging
 .Python
+env/
 build/
 develop-eggs/
 dist/
@@ -66,6 +67,7 @@ share/python-wheels/
 .installed.cfg
 *.egg
 MANIFEST
+.ropeproject/
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
@@ -87,7 +89,7 @@ htmlcov/
 nosetests.xml
 coverage.xml
 *.cover
-*.py,cover
+*,cover
 .hypothesis/
 .pytest_cache/
 cover/
@@ -101,6 +103,7 @@ cover/
 local_settings.py
 db.sqlite3
 db.sqlite3-journal
+data/
 
 # Flask stuff:
 instance/
@@ -116,7 +119,7 @@ docs/_build/
 .pybuilder/
 target/
 
-# Jupyter Notebook
+# Ipython Notebook
 .ipynb_checkpoints
 
 # IPython

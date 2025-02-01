@@ -1,0 +1,48 @@
+[project]
+name = "pretix-oidc"
+dynamic = ["version"]
+description = "OIDC authentication plugin for pretix"
+readme = "README.md"
+license = {text = "Apache"}
+keywords = ["pretix", "oidc"]
+authors = [
+    {name = "Felix Schäfer", email = "admin@kif.rocks"},
+    {name = "Jaakko Rinta-Filppula"},
+]
+maintainers = [
+    {name = "Felix Schäfer", email = "admin@kif.rocks"},
+]
+
+dependencies = [
+    "dictlib",
+    "oic",
+]
+
+[project.entry-points."pretix.plugin"]
+pretix_oidc = "pretix_oidc:PretixPluginMeta"
+
+[project.entry-points."distutils.commands"]
+build = "pretix_plugin_build.build:CustomBuild"
+
+[build-system]
+requires = [
+    "setuptools",
+    "pretix-plugin-build",
+]
+
+[project.urls]
+Homepage = "https://gitlab.fachschaften.org/kif/pretix-oidc"
+Repository = "https://github.com/thegcat/pretix-oidc"
+Tracker = "https://github.com/thegcat/pretix-oidc/issues"
+"pretix Marketplace" = "https://marketplace.pretix.eu/products/oidc/"
+
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.dynamic]
+version = {attr = "pretix_oidc.__version__"}
+
+[tool.setuptools.packages.find]
+include = ["pretix*"]
+namespaces = false

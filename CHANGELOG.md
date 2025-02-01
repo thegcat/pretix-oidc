@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.2.1] - 2025-02-01
+
 ### Fixed
 
 - Include CHANGELOG in manifest
@@ -21,4 +23,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Release on PyPi
 
+[2.2.1]: https://github.com/thegcat/pretix-oidc/compare/v2.2.0...v2.2.1
 [2.2.0]: https://github.com/thegcat/pretix-oidc/releases/tag/v2.2.0

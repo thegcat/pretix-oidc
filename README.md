@@ -8,7 +8,7 @@ OIDC authentication plugin for pretix
 
 Activate the virtual environment for your pretix installation and run
 
-    pip install git+https://gitlab.fachschaften.org/kif/pretix-oidc.git
+    pip install pretix-oidc
 
 To activate the OIDC authentication mechanism add
 `pretix_oidc.auth.OIDCAuthBackend` to the list of `pretix.auth_backends` in

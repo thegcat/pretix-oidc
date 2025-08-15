@@ -37,6 +37,9 @@ your `pretix.cfg`. Add the OIDC configuration to that same file in a new
     # what OIDC claim pretix should use to uniquely identify OIDC users
     # default: sub
     unique_attribute=
+    # set staff scope to an scope name (maybe you need to add it to scopes as well) and a value to test against to promote users as staff
+    staff_scope=
+    staff_value=
 
 The callback URI on your pretix will be `/oidc/callback/`, enter this at the
 appropriate place in your OIDC provider.

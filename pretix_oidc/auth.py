@@ -45,7 +45,7 @@ class OIDCAuthBackend(BaseAuthBackend):
                 # If skip_provider_discovery is set, we do not fetch the provider config
                 # but use the provided information directly.
                 self.client.provider_config(op_info["issuer"])
-            self.client.provider_config(op_info["issuer"])
+            self.client.handle_provider_config(op_info, op_info["issuer"])
 
             missing_endpoints = {
                 "authorization_endpoint",

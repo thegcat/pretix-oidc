@@ -54,7 +54,7 @@ class OIDCAuthBackend(BaseAuthBackend):
                 "end_session_endpoint",
                 "jwks_uri"
             } - set(
-                {k:v for k,v in self.client.__dict__.items() if k.endswith("_endpoint") and v is not None}.keys()
+                {k:v for k,v in self.client.__dict__.items() if v is not None}.keys()
             )
             if len(missing_endpoints)>0:
                 logger.error("Please specify " + ", ".join(sorted(missing_endpoints)) + " in [oidc] section in pretix.cfg")

@@ -46,7 +46,7 @@ def oidc_callback(request):
     else:
         _add_user_to_teams(user, id_token)
         staff_scope = config.get("oidc", "staff_scope")
-        staff_values = [v.trim() for v in config.get("oidc", "staff_value").split(",")]
+        staff_values = [v.strip() for v in config.get("oidc", "staff_value").split(",")]
         if staff_scope is not None and staff_values is not None:
             values = _get_attr(id_token, staff_scope)
 

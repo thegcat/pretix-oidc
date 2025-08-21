@@ -51,13 +51,16 @@ class OIDCAuthBackend(BaseAuthBackend):
                 "authorization_endpoint",
                 "token_endpoint",
                 "userinfo_endpoint",
-                "end_session_endpoint",
-                "jwks_uri"
+                "end_session_endpoint"
             } - set(
                 {k:v for k,v in self.client.__dict__.items() if k.endswith("_endpoint") and v is not None}.keys()
             )
             if len(missing_endpoints)>0:
                 logger.error("Please specify " + ", ".join(sorted(missing_endpoints)) + " in [oidc] section in pretix.cfg")
+            if len(self.client.keyjar[op_info["issuer"]]) == 0:
+                logger.error(
+                    "Please specify jwks_uri in [oidc] section in pretix.cfg or ensure that the issuer supports jwks_uri discovery."
+                )
             self.client.handle_provider_config(op_info, op_info["issuer"])
             self.client.store_registration_info(client_reg)
             self.client.redirect_uris = [None]

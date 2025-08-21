@@ -23,16 +23,16 @@ class OIDCAuthBackend(BaseAuthBackend):
                 "oidc", "title", fallback="Login with OpenID connect"
             )
 
-            # setting config.get to None and ProviderConfigurationResponse handles None as unset we can use this
-            # object as overrides
+            # setting config.get to None and ProviderConfigurationResponse handles empty string as unset we can use this
+            # object as override values
             op_info = ProviderConfigurationResponse(
                 version="1.0",
                 issuer=config.get("oidc", "issuer"),
-                authorization_endpoint=config.get("oidc", "authorization_endpoint", fallback=None),
-                token_endpoint=config.get("oidc", "token_endpoint", fallback=None),
-                userinfo_endpoint=config.get("oidc", "userinfo_endpoint", fallback=None),
-                end_session_endpoint=config.get("oidc", "end_session_endpoint", fallback=None),
-                jwks_uri=config.get("oidc", "jwks_uri", fallback=None),
+                authorization_endpoint=config.get("oidc", "authorization_endpoint", fallback=""),
+                token_endpoint=config.get("oidc", "token_endpoint", fallback=""),
+                userinfo_endpoint=config.get("oidc", "userinfo_endpoint", fallback=""),
+                end_session_endpoint=config.get("oidc", "end_session_endpoint", fallback=""),
+                jwks_uri=config.get("oidc", "jwks_uri", fallback=""),
             )
 
             client_reg = RegistrationResponse(

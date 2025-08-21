@@ -1,4 +1,5 @@
 from dictlib import dig_get
+from json import JSONDecodeError
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import redirect
@@ -44,11 +45,16 @@ def oidc_callback(request):
         return redirect(reverse("control:auth.login"))
     else:
         _add_user_to_teams(user, id_token)
-        staff_scope, staff_value = config.get("oidc", "staff_scope"), config.get("oidc", "staff_value")
-        if staff_scope is not None and staff_value is not None:
+        staff_scope = config.get("oidc", "staff_scope")
+        try:
+            staff_values = config.get("oidc", "staff_value", as_type=list)
+        except JSONDecodeError:
+            # Fallback to single value if the setting is not a list
+            staff_values = [config.get("oidc", "staff_value")]
+        if staff_scope is not None and staff_values is not None:
             values = _get_attr(id_token, staff_scope)
 
-            user.is_staff = staff_value in values
+            user.is_staff = len(set(values) & set(staff_values)) > 0
             user.save()
         return process_login(request, user, False)
 

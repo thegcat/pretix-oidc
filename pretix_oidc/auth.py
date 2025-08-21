@@ -46,6 +46,18 @@ class OIDCAuthBackend(BaseAuthBackend):
                 # but use the provided information directly.
                 self.client.provider_config(op_info["issuer"])
             self.client.provider_config(op_info["issuer"])
+
+            missing_endpoints = {
+                "authorization_endpoint",
+                "token_endpoint",
+                "userinfo_endpoint",
+                "end_session_endpoint",
+                "jwks_uri"
+            } - set(
+                {k:v for k,v in self.client.__dict__.items() if k.endswith("_endpoint") and v is not None}.keys()
+            )
+            if len(missing_endpoints)>0:
+                logger.error("Please specify " + ", ".join(sorted(missing_endpoints)) + " in [oidc] section in pretix.cfg")
             self.client.handle_provider_config(op_info, op_info["issuer"])
             self.client.store_registration_info(client_reg)
             self.client.redirect_uris = [None]
@@ -53,8 +65,7 @@ class OIDCAuthBackend(BaseAuthBackend):
             self.scopes = config.get("oidc", "scopes", fallback="openid").split(",")
         except KeyError:
             logger.error(
-                "Please specify issuer, authorization_endpoint, token_endpoint, userinfo_endpoint, end_session_endpoint, jwks_uri, client_id and client_secret "
-                "in [oidc] section in pretix.cfg"
+                "Please specify issuer, client_id and client_secret in [oidc] section in pretix.cfg"
             )
 
     @property

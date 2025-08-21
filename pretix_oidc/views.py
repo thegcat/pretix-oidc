@@ -69,8 +69,8 @@ def _add_user_to_teams(user, id_token):
 
 def _get_attr(id_token, attr_name):
     values = dig_get(id_token, rule.attribute, [])
-        if type(values) is not list:
-            values = [values]
+    if type(values) is not list:
+        values = [values]
     return values
 
 # These views have been adapted from pretix-cas plugin (https://github.com/DataManagementLab/pretix-cas)

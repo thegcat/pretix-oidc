@@ -41,7 +41,7 @@ class OIDCAuthBackend(BaseAuthBackend):
             )
 
             self.client = Client(client_authn_method=CLIENT_AUTHN_METHOD)
-            if config.get("oidc", "skip_provider_discovery", fallback=False):
+            if not config.get("oidc", "skip_provider_discovery", fallback=False):
                 # If skip_provider_discovery is set, we do not fetch the provider config
                 # but use the provided information directly.
                 self.client.provider_config(op_info["issuer"])
@@ -57,7 +57,7 @@ class OIDCAuthBackend(BaseAuthBackend):
             )
             if len(missing_endpoints)>0:
                 logger.error("Please specify " + ", ".join(sorted(missing_endpoints)) + " in [oidc] section in pretix.cfg")
-            if len(self.client.keyjar[op_info["issuer"]]) == 0:
+            if  len(self.client.keyjar.get_issuer_keys(self.client.issuer)) == 0:
                 logger.error(
                     "Please specify jwks_uri in [oidc] section in pretix.cfg or ensure that the issuer supports jwks_uri discovery."
                 )

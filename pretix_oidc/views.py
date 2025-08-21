@@ -74,7 +74,7 @@ def _add_user_to_teams(user, id_token):
             rule.team.members.remove(user)
 
 def _get_attr(id_token, attr_name):
-    values = dig_get(id_token, rule.attribute, [])
+    values = dig_get(id_token, attr_name, [])
     if type(values) is not list:
         values = [values]
     return values

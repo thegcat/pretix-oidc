@@ -1,5 +1,6 @@
 import logging
 import time
+from configparser import NoOptionError
 from django.urls import reverse
 from oic import rndstr
 from oic.oic import Client
@@ -22,14 +23,16 @@ class OIDCAuthBackend(BaseAuthBackend):
                 "oidc", "title", fallback="Login with OpenID connect"
             )
 
+            # setting config.get to None and ProviderConfigurationResponse handles None as unset we can use this
+            # object as overrides
             op_info = ProviderConfigurationResponse(
                 version="1.0",
                 issuer=config.get("oidc", "issuer"),
-                authorization_endpoint=config.get("oidc", "authorization_endpoint"),
-                token_endpoint=config.get("oidc", "token_endpoint"),
-                userinfo_endpoint=config.get("oidc", "userinfo_endpoint"),
-                end_session_endpoint=config.get("oidc", "end_session_endpoint"),
-                jwks_uri=config.get("oidc", "jwks_uri"),
+                authorization_endpoint=config.get("oidc", "authorization_endpoint", fallback=None),
+                token_endpoint=config.get("oidc", "token_endpoint", fallback=None),
+                userinfo_endpoint=config.get("oidc", "userinfo_endpoint", fallback=None),
+                end_session_endpoint=config.get("oidc", "end_session_endpoint", fallback=None),
+                jwks_uri=config.get("oidc", "jwks_uri", fallback=None),
             )
 
             client_reg = RegistrationResponse(
@@ -38,6 +41,11 @@ class OIDCAuthBackend(BaseAuthBackend):
             )
 
             self.client = Client(client_authn_method=CLIENT_AUTHN_METHOD)
+            if config.get("oidc", "skip_provider_discovery", fallback=False):
+                # If skip_provider_discovery is set, we do not fetch the provider config
+                # but use the provided information directly.
+                self.client.provider_config(op_info["issuer"])
+            self.client.provider_config(op_info["issuer"])
             self.client.handle_provider_config(op_info, op_info["issuer"])
             self.client.store_registration_info(client_reg)
             self.client.redirect_uris = [None]

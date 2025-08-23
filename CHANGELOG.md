@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Published on PyPi now
+- Query userinfo for user data (fixes login with Authelia ≥ v4.39.0)
 
 ## [2.2.1] - 2025-02-01
 

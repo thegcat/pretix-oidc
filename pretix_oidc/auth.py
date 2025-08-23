@@ -116,11 +116,13 @@ class OIDCAuthBackend(BaseAuthBackend):
             authn_method="client_secret_basic",
         )
 
+        userinfo = self.client.do_user_info_request(state=auth_response["state"])
+
         id_token = access_token_response["id_token"]
         user_data = {
-            "uuid": id_token[config.get("oidc", "unique_attribute", fallback="sub")],
-            "email": id_token["email"],
-            "fullname": id_token["name"],
+            "uuid": userinfo[config.get("oidc", "unique_attribute", fallback="sub")],
+            "email": userinfo["email"],
+            "fullname": userinfo["name"],
             "auth_backend": self.identifier,
         }
 

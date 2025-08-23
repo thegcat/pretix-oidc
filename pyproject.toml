@@ -3,7 +3,7 @@ name = "pretix-oidc"
 dynamic = ["version"]
 description = "OIDC authentication plugin for pretix"
 readme = "README.md"
-license = {text = "Apache"}
+license = "Apache-2.0"
 keywords = ["pretix", "oidc"]
 authors = [
     {name = "Felix Schäfer", email = "admin@kif.rocks"},

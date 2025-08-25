@@ -1,5 +1,6 @@
 import logging
 import time
+from configparser import NoOptionError, NoSectionError
 from django.urls import reverse
 from oic import rndstr
 from oic.oic import Client
@@ -43,7 +44,7 @@ class OIDCAuthBackend(BaseAuthBackend):
             self.client.redirect_uris = [None]
 
             self.scopes = config.get("oidc", "scopes", fallback="openid").split(",")
-        except (KeyError, NoOptionError):
+        except (NoSectionError, NoOptionError):
             logger.error(
                 "Please specify issuer, authorization_endpoint, token_endpoint, userinfo_endpoint, end_session_endpoint, jwks_uri, client_id and client_secret "
                 "in [oidc] section in pretix.cfg"

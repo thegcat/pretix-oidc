@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Better handle missing oidc settings
+
 ## [2.3.1] - 2025-08-24
 
 ### Fixed

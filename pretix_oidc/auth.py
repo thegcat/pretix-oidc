@@ -1,6 +1,6 @@
 import logging
 import time
-from configparser import NoOptionError
+from configparser import NoOptionError, NoSectionError
 from django.urls import reverse
 from oic import rndstr
 from oic.oic import Client
@@ -23,16 +23,14 @@ class OIDCAuthBackend(BaseAuthBackend):
                 "oidc", "title", fallback="Login with OpenID connect"
             )
 
-            # setting config.get to None and ProviderConfigurationResponse handles empty string as unset we can use this
-            # object as override values
             op_info = ProviderConfigurationResponse(
                 version="1.0",
                 issuer=config.get("oidc", "issuer"),
-                authorization_endpoint=config.get("oidc", "authorization_endpoint", fallback=""),
-                token_endpoint=config.get("oidc", "token_endpoint", fallback=""),
-                userinfo_endpoint=config.get("oidc", "userinfo_endpoint", fallback=""),
-                end_session_endpoint=config.get("oidc", "end_session_endpoint", fallback=""),
-                jwks_uri=config.get("oidc", "jwks_uri", fallback=""),
+                authorization_endpoint=config.get("oidc", "authorization_endpoint"),
+                token_endpoint=config.get("oidc", "token_endpoint"),
+                userinfo_endpoint=config.get("oidc", "userinfo_endpoint"),
+                end_session_endpoint=config.get("oidc", "end_session_endpoint"),
+                jwks_uri=config.get("oidc", "jwks_uri"),
             )
 
             client_reg = RegistrationResponse(
@@ -66,9 +64,10 @@ class OIDCAuthBackend(BaseAuthBackend):
             self.client.redirect_uris = [None]
 
             self.scopes = config.get("oidc", "scopes", fallback="openid").split(",")
-        except KeyError:
+        except (NoSectionError, NoOptionError):
             logger.error(
-                "Please specify issuer, client_id and client_secret in [oidc] section in pretix.cfg"
+                "Please specify issuer, authorization_endpoint, token_endpoint, userinfo_endpoint, end_session_endpoint, jwks_uri, client_id and client_secret "
+                "in [oidc] section in pretix.cfg"
             )
 
     @property

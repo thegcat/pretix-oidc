@@ -11,6 +11,7 @@ from pretix.base.models.auth import EmailAddressTakenError
 from pretix.control.permissions import OrganizerPermissionRequiredMixin
 from pretix.control.views.auth import process_login
 from pretix.helpers.compat import CompatDeleteView
+from pretix.settings import config
 
 from .auth import OIDCAuthBackend  # NOQA
 from .forms import OIDCAssignmentRuleForm
@@ -43,6 +44,7 @@ def oidc_callback(request):
         return redirect(reverse("control:auth.login"))
     else:
         _add_user_to_teams(user, id_token)
+        _add_user_to_staff(user, id_token)
         return process_login(request, user, False)
 
 
@@ -50,10 +52,7 @@ def _add_user_to_teams(user, id_token):
     rules = OIDCTeamAssignmentRule.objects.all()
 
     for rule in rules:
-        values = dig_get(id_token, rule.attribute, [])
-
-        if type(values) is not list:
-            values = [values]
+        values = _get_attr(id_token, rule.attribute)
 
         if rule.value in values:
             try:
@@ -62,6 +61,26 @@ def _add_user_to_teams(user, id_token):
                 pass
         else:
             rule.team.members.remove(user)
+
+
+def _add_user_to_staff(user, id_token):
+    if config.has_option("oidc", "staff_scope") and config.has_option(
+        "oidc", "staff_value"
+    ):
+        staff_scope = config.get("oidc", "staff_scope")
+        staff_values = [v.strip() for v in config.get("oidc", "staff_value").split(",")]
+        if staff_scope is not None and staff_values is not None:
+            values = _get_attr(id_token, staff_scope)
+
+            user.is_staff = len(set(values) & set(staff_values)) > 0
+            user.save()
+
+
+def _get_attr(id_token, attr_name):
+    values = dig_get(id_token, attr_name, [])
+    if type(values) is not list:
+        values = [values]
+    return values
 
 
 # These views have been adapted from pretix-cas plugin (https://github.com/DataManagementLab/pretix-cas)

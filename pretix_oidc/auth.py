@@ -153,3 +153,5 @@ class OIDCAuthBackend(BaseAuthBackend):
         }
 
         return [user_data, id_token]
+
+auth_backend = OIDCAuthBackend()

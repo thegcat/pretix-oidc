@@ -65,10 +65,12 @@ def _add_user_to_teams(user, id_token):
 
 def _add_user_to_staff(user, id_token):
     if (
-            config.has_option("oidc", "staff_claim") or
-            config.has_option("oidc", "staff_scope")
+        config.has_option("oidc", "staff_claim")
+        or config.has_option("oidc", "staff_scope")
     ) and config.has_option("oidc", "staff_value"):
-        staff_claim = config.get("oidc", "staff_claim", None) or config.get("oidc", "staff_scope", None)
+        staff_claim = config.get("oidc", "staff_claim", None) or config.get(
+            "oidc", "staff_scope", None
+        )
         staff_values = [v.strip() for v in config.get("oidc", "staff_value").split(",")]
         if staff_claim is not None and staff_values is not None:
             values = _get_attr(id_token, staff_claim)

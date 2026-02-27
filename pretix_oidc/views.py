@@ -13,13 +13,12 @@ from pretix.control.views.auth import process_login
 from pretix.helpers.compat import CompatDeleteView
 from pretix.settings import config
 
-from .auth import OIDCAuthBackend  # NOQA
+from .auth import auth_backend  # NOQA
 from .forms import OIDCAssignmentRuleForm
 from .models import OIDCTeamAssignmentRule
 
 
 def oidc_callback(request):
-    auth_backend = OIDCAuthBackend()
     user_data, id_token = auth_backend.process_callback(request)
 
     if user_data is None:

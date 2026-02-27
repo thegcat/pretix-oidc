@@ -23,14 +23,16 @@ class OIDCAuthBackend(BaseAuthBackend):
                 "oidc", "title", fallback="Login with OpenID connect"
             )
 
+            # setting config.get to None and ProviderConfigurationResponse handles empty string as unset we can use this
+            # object as override values
             op_info = ProviderConfigurationResponse(
                 version="1.0",
                 issuer=config.get("oidc", "issuer"),
-                authorization_endpoint=config.get("oidc", "authorization_endpoint"),
-                token_endpoint=config.get("oidc", "token_endpoint"),
-                userinfo_endpoint=config.get("oidc", "userinfo_endpoint"),
-                end_session_endpoint=config.get("oidc", "end_session_endpoint"),
-                jwks_uri=config.get("oidc", "jwks_uri"),
+                authorization_endpoint=config.get("oidc", "authorization_endpoint", fallback=""),
+                token_endpoint=config.get("oidc", "token_endpoint", fallback=""),
+                userinfo_endpoint=config.get("oidc", "userinfo_endpoint", fallback=""),
+                end_session_endpoint=config.get("oidc", "end_session_endpoint", fallback=""),
+                jwks_uri=config.get("oidc", "jwks_uri", fallback=""),
             )
 
             client_reg = RegistrationResponse(
@@ -39,6 +41,30 @@ class OIDCAuthBackend(BaseAuthBackend):
             )
 
             self.client = Client(client_authn_method=CLIENT_AUTHN_METHOD)
+            if not config.get("oidc", "skip_provider_discovery", fallback=False):
+                # If skip_provider_discovery is set, we do not fetch the provider config
+                # but use the provided information directly.
+                self.client.provider_config(op_info["issuer"])
+            self.client.handle_provider_config(op_info, op_info["issuer"])
+
+            missing_endpoints = {
+                "authorization_endpoint",
+                "token_endpoint",
+                "userinfo_endpoint",
+                "end_session_endpoint"
+            } - {
+                k
+                for k,v
+                in self.client.__dict__.items()
+                if k.endswith("_endpoint") and v is not None
+            }
+            if len(missing_endpoints)>0:
+                logger.error("Please specify " + ", ".join(sorted(missing_endpoints)) + " in [oidc] section in pretix.cfg")
+            # check whether we have at least one key for the issuer
+            if  len(self.client.keyjar.get_issuer_keys(self.client.issuer)) == 0:
+                logger.error(
+                    "Please specify jwks_uri in [oidc] section in pretix.cfg or ensure that the issuer supports jwks_uri discovery."
+                )
             self.client.handle_provider_config(op_info, op_info["issuer"])
             self.client.store_registration_info(client_reg)
             self.client.redirect_uris = [None]
@@ -46,8 +72,7 @@ class OIDCAuthBackend(BaseAuthBackend):
             self.scopes = config.get("oidc", "scopes", fallback="openid").split(",")
         except (NoSectionError, NoOptionError):
             logger.error(
-                "Please specify issuer, authorization_endpoint, token_endpoint, userinfo_endpoint, end_session_endpoint, jwks_uri, client_id and client_secret "
-                "in [oidc] section in pretix.cfg"
+                "Please specify issuer, client_id and client_secret in [oidc] section in pretix.cfg"
             )
 
     @property
@@ -128,3 +153,5 @@ class OIDCAuthBackend(BaseAuthBackend):
         }
 
         return [user_data, id_token]
+
+auth_backend = OIDCAuthBackend()

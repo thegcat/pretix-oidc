@@ -1,9 +1,12 @@
 from dictlib import dig_get
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
+from django.http import JsonResponse
 from django.shortcuts import redirect
 from django.urls import reverse
 from django.utils.translation import gettext as _
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
 from django.views.generic import TemplateView
 from django.views.generic.edit import CreateView
 from pretix.base.models import Team, User
@@ -13,13 +16,12 @@ from pretix.control.views.auth import process_login
 from pretix.helpers.compat import CompatDeleteView
 from pretix.settings import config
 
-from .auth import OIDCAuthBackend  # NOQA
+from .auth import auth_backend  # NOQA
 from .forms import OIDCAssignmentRuleForm
 from .models import OIDCTeamAssignmentRule
 
 
 def oidc_callback(request):
-    auth_backend = OIDCAuthBackend()
     user_data, id_token = auth_backend.process_callback(request)
 
     if user_data is None:
@@ -45,7 +47,10 @@ def oidc_callback(request):
     else:
         _add_user_to_teams(user, id_token)
         _add_user_to_staff(user, id_token)
-        return process_login(request, user, False)
+        response = process_login(request, user, False)
+        # after process_login we can use the real session key
+        auth_backend.store_oidc_session(request.session.session_key, user, id_token)
+        return response
 
 
 def _add_user_to_teams(user, id_token):
@@ -84,6 +89,22 @@ def _get_attr(id_token, attr_name):
         values = [values]
     return values
 
+@csrf_exempt
+@require_POST
+def oidc_backchannel_logout(request):
+    """
+    Handle OIDC back-channel logout requests.
+
+    Processes a POST request from an OpenID Connect provider to terminate
+    user sessions associated with an OIDC logout event.
+
+    See: https://openid.net/specs/openid-connect-backchannel-1_0.html
+    """
+    logout_response = auth_backend.process_backchannel_logout(request)
+    if logout_response.get("status") == "logout_error":
+        return JsonResponse(data=logout_response, status=400)
+
+    return JsonResponse(data=logout_response, status=200)
 
 # These views have been adapted from pretix-cas plugin (https://github.com/DataManagementLab/pretix-cas)
 class AssignmentRulesList(TemplateView, OrganizerPermissionRequiredMixin):

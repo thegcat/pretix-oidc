@@ -4,6 +4,7 @@ from . import views
 
 urlpatterns = [
     path("oidc/callback/", views.oidc_callback, name="oidc_callback"),
+    path("oidc/backchannel_logout/", views.oidc_backchannel_logout, name="oidc_backchannel_logout"),
     path(
         "control/organizer/<str:organizer>/teams/assignment_rules/",
         views.AssignmentRulesList.as_view(),

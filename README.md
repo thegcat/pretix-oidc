@@ -19,9 +19,14 @@ your `pretix.cfg`. Add the OIDC configuration to that same file in a new
     # label on the login button,
     # default: Login with OpenID connect
     title=
+    # issuer must be set
+    issuer=
+    # all endpoints are normally autodiscovered
+    # autodiscover might be disabled by setting skip_provider_discovery=True
+    skip_provider_discovery=
     # OIDC URIs, can generally be found unter .well-known/openid-configuration
     # of your OIDC endpoint
-    issuer=
+    # to override autodiscovered values or manually seeting them when autodiscover is disabled, set them manually
     authorization_endpoint=
     token_endpoint=
     userinfo_endpoint=
@@ -42,6 +47,9 @@ your `pretix.cfg`. Add the OIDC configuration to that same file in a new
     staff_value=
     # multiple staff_values can be provided, separated by commas. whitespaces are ignored.
     # staff_value=val_1,val_2
+    lifetime=
+    # lifetime in seconds of the OIDC backend object including JWKS cache
+    # default: 3600
 
 The callback URI on your pretix will be `/oidc/callback/`, enter this at the
 appropriate place in your OIDC provider.

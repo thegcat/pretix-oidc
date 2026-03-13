@@ -1,6 +1,9 @@
 from django.urls import path
 
+from pretix.api.urls import orga_router
+
 from . import views
+from .api import OIDCTeamAssignmentRuleViewSet
 
 urlpatterns = [
     path("oidc/callback/", views.oidc_callback, name="oidc_callback"),
@@ -20,3 +23,10 @@ urlpatterns = [
         name="team_assignment_rules.delete",
     ),
 ]
+
+orga_router.register(
+    "team_assignment_rules",
+    OIDCTeamAssignmentRuleViewSet,
+    basename="team_assignment_rule",
+)
+

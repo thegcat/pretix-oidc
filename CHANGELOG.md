@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- REST API for managing team assignment rules (`/api/v1/organizers/{organizer}/team_assignment_rules/`)
+
 ### Fixed
 
 - Better handle missing oidc settings

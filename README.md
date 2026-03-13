@@ -62,6 +62,35 @@ arbitrary OIDC attributes (claims). Team assignment rules will apply when
 users log in, users matching newly created rules might need to log out and
 back in for the assignment to take effect.
 
+## API
+
+Team assignment rules can also be managed via the pretix REST API. All
+endpoints require a token with the `can_change_organizer_settings` permission.
+
+### Endpoints
+
+| Method   | URL                                                                  | Description       |
+|----------|----------------------------------------------------------------------|-------------------|
+| `GET`    | `/api/v1/organizers/{organizer}/team_assignment_rules/`              | List all rules    |
+| `POST`   | `/api/v1/organizers/{organizer}/team_assignment_rules/`              | Create a rule     |
+| `GET`    | `/api/v1/organizers/{organizer}/team_assignment_rules/{id}/`         | Retrieve a rule   |
+| `PUT`    | `/api/v1/organizers/{organizer}/team_assignment_rules/{id}/`         | Full update       |
+| `PATCH`  | `/api/v1/organizers/{organizer}/team_assignment_rules/{id}/`         | Partial update    |
+| `DELETE` | `/api/v1/organizers/{organizer}/team_assignment_rules/{id}/`         | Delete a rule     |
+
+### Resource format
+
+    {
+        "id": 1,
+        "team": 23,
+        "attribute": "groups",
+        "value": "admin"
+    }
+
+- **team** (integer) — ID of a team belonging to the organizer.
+- **attribute** (string) — OIDC claim name to match against.
+- **value** (string) — Expected value of the OIDC claim.
+
 ## Development setup
 
 1. Make sure that you have a working [pretix development

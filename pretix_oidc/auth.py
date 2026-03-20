@@ -123,7 +123,7 @@ class OIDCAuthBackend(BaseAuthBackend):
         user_data = {
             "uuid": userinfo[config.get("oidc", "unique_attribute", fallback="sub")],
             "email": userinfo["email"],
-            "fullname": userinfo["name"],
+            "fullname": userinfo[config.get("oidc", "fullname_claim", fallback="name")],
             "auth_backend": self.identifier,
         }
 

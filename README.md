@@ -37,11 +37,18 @@ your `pretix.cfg`. Add the OIDC configuration to that same file in a new
     # what OIDC claim pretix should use to uniquely identify OIDC users
     # default: sub
     unique_attribute=
+    # what OIDC claim pretix should use for the user's full name
+    # default: name
+    fullname_claim=
     # set staff scope to an claim name (maybe you need to add it to scopes as well) and a value to test against to promote users as staff
     staff_claim=
     staff_value=
     # multiple staff_values can be provided, separated by commas. whitespaces are ignored.
     # staff_value=val_1,val_2
+    # enable debug logging of OIDC claims on login; comma-separated list of modes:
+    # "logging" logs claims via Python logging at DEBUG level
+    # "sentry" sends claims to Sentry (requires [sentry] dsn to be configured)
+    # debug_claims=logging,sentry
 
 The callback URI on your pretix will be `/oidc/callback/`, enter this at the
 appropriate place in your OIDC provider.
@@ -61,6 +68,35 @@ can be added to a specific team of that organizer based on the value of
 arbitrary OIDC attributes (claims). Team assignment rules will apply when
 users log in, users matching newly created rules might need to log out and
 back in for the assignment to take effect.
+
+## API
+
+Team assignment rules can also be managed via the pretix REST API. All
+endpoints require a token with the `can_change_organizer_settings` permission.
+
+### Endpoints
+
+| Method   | URL                                                                  | Description       |
+|----------|----------------------------------------------------------------------|-------------------|
+| `GET`    | `/api/v1/organizers/{organizer}/team_assignment_rules/`              | List all rules    |
+| `POST`   | `/api/v1/organizers/{organizer}/team_assignment_rules/`              | Create a rule     |
+| `GET`    | `/api/v1/organizers/{organizer}/team_assignment_rules/{id}/`         | Retrieve a rule   |
+| `PUT`    | `/api/v1/organizers/{organizer}/team_assignment_rules/{id}/`         | Full update       |
+| `PATCH`  | `/api/v1/organizers/{organizer}/team_assignment_rules/{id}/`         | Partial update    |
+| `DELETE` | `/api/v1/organizers/{organizer}/team_assignment_rules/{id}/`         | Delete a rule     |
+
+### Resource format
+
+    {
+        "id": 1,
+        "team": 23,
+        "attribute": "groups",
+        "value": "admin"
+    }
+
+- **team** (integer) — ID of a team belonging to the organizer.
+- **attribute** (string) — OIDC claim name to match against.
+- **value** (string) — Expected value of the OIDC claim.
 
 ## Development setup
 

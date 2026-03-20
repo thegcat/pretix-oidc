@@ -1,3 +1,5 @@
+import logging
+
 from dictlib import dig_get
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
@@ -12,6 +14,8 @@ from pretix.control.permissions import OrganizerPermissionRequiredMixin
 from pretix.control.views.auth import process_login
 from pretix.helpers.compat import CompatDeleteView
 from pretix.settings import config
+
+logger = logging.getLogger(__name__)
 
 from .auth import OIDCAuthBackend  # NOQA
 from .forms import OIDCAssignmentRuleForm
@@ -48,7 +52,27 @@ def oidc_callback(request):
         return process_login(request, user, False)
 
 
+def _debug_claims(label, user, id_token):
+    if not config.has_option("oidc", "debug_claims"):
+        return
+    mode = config.get("oidc", "debug_claims").strip().lower()
+    msg = f"pretix-oidc.callback:{label}: user={user} id_token={dict(id_token)}"
+
+    if "logging" in mode:
+        logger.debug(msg)
+
+    if "sentry" in mode and config.has_option("sentry", "dsn"):
+        import sentry_sdk
+        from sentry_sdk.utils import current_stacktrace
+        sentry_sdk.capture_event({
+            "message": msg,
+            "level": "debug",
+            "stacktrace": current_stacktrace(),
+        })
+
+
 def _add_user_to_teams(user, id_token):
+    _debug_claims("_add_user_to_teams", user, id_token)
     rules = OIDCTeamAssignmentRule.objects.all()
 
     for rule in rules:
@@ -64,12 +88,13 @@ def _add_user_to_teams(user, id_token):
 
 
 def _add_user_to_staff(user, id_token):
+    _debug_claims("_add_user_to_staff", user, id_token)
     if (
         config.has_option("oidc", "staff_claim")
         or config.has_option("oidc", "staff_scope")
     ) and config.has_option("oidc", "staff_value"):
-        staff_claim = config.get("oidc", "staff_claim", None) or config.get(
-            "oidc", "staff_scope", None
+        staff_claim = config.get("oidc", "staff_claim") or config.get(
+            "oidc", "staff_scope"
         )
         staff_values = [v.strip() for v in config.get("oidc", "staff_value").split(",")]
         if staff_claim is not None and staff_values is not None:

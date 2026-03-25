@@ -23,18 +23,6 @@ class OIDCAuthBackend(BaseAuthBackend):
                 "oidc", "title", fallback="Login with OpenID connect"
             )
 
-            # setting config.get to None and ProviderConfigurationResponse handles empty string as unset we can use this
-            # object as override values
-            op_info = ProviderConfigurationResponse(
-                version="1.0",
-                issuer=config.get("oidc", "issuer"),
-                authorization_endpoint=config.get("oidc", "authorization_endpoint", fallback=""),
-                token_endpoint=config.get("oidc", "token_endpoint", fallback=""),
-                userinfo_endpoint=config.get("oidc", "userinfo_endpoint", fallback=""),
-                end_session_endpoint=config.get("oidc", "end_session_endpoint", fallback=""),
-                jwks_uri=config.get("oidc", "jwks_uri", fallback=""),
-            )
-
             client_reg = RegistrationResponse(
                 client_id=config.get("oidc", "client_id"),
                 client_secret=config.get("oidc", "client_secret"),
@@ -42,11 +30,23 @@ class OIDCAuthBackend(BaseAuthBackend):
 
             self.client = Client(client_authn_method=CLIENT_AUTHN_METHOD)
             if not config.get("oidc", "skip_provider_discovery", fallback=False):
-                # If skip_provider_discovery is set, we do not fetch the provider config
-                # but use the provided information directly.
-                self.client.provider_config(op_info["issuer"])
-            self.client.handle_provider_config(op_info, op_info["issuer"])
+                # If skip_provider_discovery is not set, we run a normal oidc discovery
+                # caution discovery might miss some required information. Therefore, we need to check this aswell
+                self.client.provider_config(config.get("oidc", "issuer"))
+            else:
+                # setting config.get to None and ProviderConfigurationResponse handles empty string as unset
+                op_info = ProviderConfigurationResponse(
+                    version="1.0",
+                    issuer=config.get("oidc", "issuer"),
+                    authorization_endpoint=config.get("oidc", "authorization_endpoint", fallback=""),
+                    token_endpoint=config.get("oidc", "token_endpoint", fallback=""),
+                    userinfo_endpoint=config.get("oidc", "userinfo_endpoint", fallback=""),
+                    end_session_endpoint=config.get("oidc", "end_session_endpoint", fallback=""),
+                    jwks_uri=config.get("oidc", "jwks_uri", fallback=""),
+                )
+                self.client.handle_provider_config(op_info, op_info["issuer"])
 
+            # check for all required endpoints
             missing_endpoints = {
                 "authorization_endpoint",
                 "token_endpoint",

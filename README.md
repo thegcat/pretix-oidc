@@ -26,7 +26,6 @@ your `pretix.cfg`. Add the OIDC configuration to that same file in a new
     skip_provider_discovery=
     # OIDC URIs, can generally be found unter .well-known/openid-configuration
     # of your OIDC endpoint
-    # to override autodiscovered values or manually seeting them when autodiscover is disabled, set them manually
     authorization_endpoint=
     token_endpoint=
     userinfo_endpoint=

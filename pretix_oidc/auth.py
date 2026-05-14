@@ -74,7 +74,7 @@ class OIDCAuthBackend(BaseAuthBackend):
                 logger.error(
                     "Please specify jwks_uri in [oidc] section in pretix.cfg or ensure that the issuer supports jwks_uri discovery."
                 )
-            self.client.handle_provider_config(op_info, op_info["issuer"])
+
             self.client.store_registration_info(client_reg)
             self.client.redirect_uris = [None]
 

@@ -68,10 +68,13 @@ def _add_user_to_staff(user, id_token):
         config.has_option("oidc", "staff_claim")
         or config.has_option("oidc", "staff_scope")
     ) and config.has_option("oidc", "staff_value"):
-        staff_claim = config.get("oidc", "staff_claim", None) or config.get(
-            "oidc", "staff_scope", None
-        )
+        if config.has_option("oidc", "staff_claim"):
+            staff_claim = config.get("oidc", "staff_claim")
+        else:
+            staff_claim = config.get("oidc", "staff_scope")
+            
         staff_values = [v.strip() for v in config.get("oidc", "staff_value").split(",")]
+        
         if staff_claim is not None and staff_values is not None:
             values = _get_attr(id_token, staff_claim)
             user.is_staff = len(set(values) & set(staff_values)) > 0
@@ -79,7 +82,8 @@ def _add_user_to_staff(user, id_token):
 
 
 def _get_attr(id_token, attr_name):
-    values = dig_get(id_token, attr_name, [])
+    token_dict = id_token.to_dict() if hasattr(id_token, 'to_dict') else id_token
+    values = dig_get(token_dict, attr_name, [])
     if type(values) is not list:
         values = [values]
     return values
